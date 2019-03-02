@@ -3,7 +3,8 @@ library(shiftR)
 library(data.table)
 
 #set working directory for personal computer
-wd = "~/Box/Capstone Hershey/Deliverable/Draft_Brooke/Shiny/Functions"
+#wd = "~/Box/Capstone Hershey/Deliverable/Draft_Brooke/Shiny/Functions"
+wd = "C:/Users/atorr/Box/Capstone Hershey/Deliverable/hersheyapp/Shiny/Functions"
 setwd(wd)
 
 #establish source and store inputs in variable files
@@ -131,31 +132,37 @@ Weighted_OH_Method = function(input_file){
     miss_op_table$MSO_Dollars = miss_op_table$MSO_Qty * miss_op_table$`Unit Retail`
     
     miss_op_table$'Store Count' = NULL
-    list_products[[j]] = miss_op_table
-    j = j + 1
+   
     
     MSO_Stores = length(unique(miss_op_table$`Store Nbr`))
     
     MSO_Store_ID = unique(miss_op_table$`Store Nbr`)
     
     Weighted_MSO = array(0, dim=nrow(miss_op_table))
-    #Weighted_MSO_list = list()
-    #l =1
+    Weighted_MSO_list = list()
+    l =1
     for (s in 1:nrow(miss_op_table)){
       
       store_match = which(Store_POS$`Store.Nbr` == miss_op_table$`Store Nbr`[s])
       
       limiter.extract = Store_POS$`Limiter Percentages`[store_match]
       
-      Weighted_MSO[s] = limiter.extract
+      Weighted_MSO_list[s] = limiter.extract
       
-      miss_op_table['Weighted MSO Mtd 3'] = limiter.extract*miss_op_table$MSO_Dollars[s]
+     # miss_op_table['Weighted MSO Mtd 3'] = limiter.extract*miss_op_table$MSO_Dollars[s]
       
-      #l = l+1
+      
+      
+      l = l+1
     }
-  #  miss_op_table['Weighted MSO list'] =0 
-   # miss_op_table['Weighted MSO'] = do.call(rbind, Weighted_MSO_list )
-  #  miss_op_table['Weighted MSO list'] = miss_op_table$`Weighted MSO`*miss_op_table$MSO_Dollars
+    miss_op_table['Weighted MSO list'] =0 
+    miss_op_table['Weighted MSO'] = do.call(rbind, Weighted_MSO_list )
+    miss_op_table['Weighted MSO list'] = miss_op_table$`Weighted MSO`*miss_op_table$MSO_Dollars
+    
+    
+    #add the table of a product to a list
+    list_products[[j]] = miss_op_table
+    j = j + 1
   }
   
   
