@@ -7,8 +7,8 @@
 #-------------------
 #Main
 
-wd = "C:/Users/atorr/Box/Capstone Hershey/Deliverable/Draft_Alejandro"
-setwd(wd)
+#wd = "C:/Users/atorr/Box/Capstone Hershey/Deliverable/Draft_Alejandro"
+#setwd(wd)
 #point R to UI and Server
 source("Shiny/server.R")
 source("Shiny/ui.R")

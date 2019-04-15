@@ -43,15 +43,19 @@ clean.data = function(input_file, file_type){
                        header = T,fileEncoding="UTF-16LE")
   }
   
-  #make sure the DF have the right names
   
-  col_name = c("UPC","Store Nbr",	"HSY Item Description","Building City",	"HSY Seasonal Segmentation"	, 
-              "WM Date",	"Store Name",	"Building State/Prov",	"Building Postal Code",	"SeasonAndYear",
-               "Unit Retail","OH Qty",	"POS Sales",	"POS Qty")
-
+  #Delete Unnecesary columns
+  #data$NetShip_Qty = NULL
+  #data$NetShip_Cost = NULL
+  
+  #make sure the DF have the right names
+  col_name = c("UPC","HSY Item Description","Hsy Seasonal Segmentation","Store Nbr",
+               "Store Name","Building City","Building State/Prov","Building Postal Code",
+               "Store Type","WM Date","SeasonAndYear","OH Qty","POS Qty","POS Sales")
+  
   colnames(data) <- col_name
   #cols.num is holding the specific columns to convert to numeric types
-  cols.num = c("UPC", "Store Nbr","Building Postal Code", "OH Qty" , "POS Sales" ,"Unit Retail", "POS Qty", "WM Date" )
+  cols.num = c("UPC", "Store Nbr","Building Postal Code", "OH Qty" , "POS Sales" , "POS Qty")
   #cols.num = colnames(data)[1,3,5]
 
   data[cols.num] = sapply(data[cols.num],as.numeric)

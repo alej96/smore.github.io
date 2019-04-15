@@ -6,13 +6,13 @@
 
 #-------------------
 #Open R Packages
-install.packages("shiny")
-install.packages("readxl")
-install.packages("plotly")
-install.packages("tidyr")
-install.packages("zoo")
-install.packages("shinywidgets")
-install.packages("shinythemes")
+#install.packages("shiny")
+#install.packages("readxl")
+#install.packages("plotly")
+#install.packages("tidyr")
+#install.packages("zoo")
+#install.packages("shinywidgets")
+#install.packages("shinythemes")
 
 
 #library(dfoptim)
@@ -100,9 +100,17 @@ server = function(input, output){
                               "Unit Retail" =c(0,0) ,"OH Qty" = c(0,0),	
                               "POS Sales" =c(0,0),	"POS Qty"=c(0,0), "MSO" =c(0,0))
       
-      col_names = c("UPC","Store Nbr",	"HSY Item Description","Building City",	"HSY Seasonal Segmentation"	, 
-                   "WM Date",	"Store Name",	"Building State/Prov",	"Building Postal Code",	"SeasonAndYear",
-                   "Unit Retail","OH Qty",	"POS Sales",	"POS Qty", "MSO")
+      empty_data <- data.frame("UPC"= c(0,0),"HSY Item Description" = c("empty data", "empty data"),
+                               "Hsy Seasonal Segmentation"= c("empty data","empty data"),"Store Nbr"=c(0,0),
+                               "Store Name" = c("empty data", "empty data"),"Building City" =c("empty data", "empty data"),
+                               "Building State/Prov" =c("empty data", "empty data"),"Building Postal Code" =c(0, 0),
+                               "Store Type" = c("empty data", "empty data"),"WM Date" = c("empty data", "empty data"),
+                                "SeasonAndYear" = c("empty data", "empty data"),"OH Qty" = c(0, 0),
+                                "POS Qty" = c(0,0),"POS Sales"= c(0,0), "MSO" = c(0,0))
+      
+      col_names = c("UPC","HSY Item Description","Hsy Seasonal Segmentation","Store Nbr",
+                    "Store Name","Building City","Building State/Prov","Building Postal Code",
+                    "Store Type","WM Date","SeasonAndYear","OH Qty","POS Qty","POS Sales", "MSO")
       
       colnames(empty_data) <- col_names
       
