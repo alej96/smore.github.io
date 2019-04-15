@@ -40,13 +40,13 @@ clean.data = function(input_file, file_type){
                        header = T)
   }else if(file_type == "txt"){
     data =  read.table(input_file, quote = "\"", sep = ",", 
-                       header = T,fileEncoding="UTF-16LE")
+                       header = T)#,fileEncoding="UTF-16LE")
   }
   
   
-  #Delete Unnecesary columns
-  #data$NetShip_Qty = NULL
-  #data$NetShip_Cost = NULL
+  #Delete Unnecesary columns!
+  data$NetShip_Qty = NULL
+  data$NetShip_Cost = NULL
   
   #make sure the DF have the right names
   col_name = c("UPC","HSY Item Description","Hsy Seasonal Segmentation","Store Nbr",
