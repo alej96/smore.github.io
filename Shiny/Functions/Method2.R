@@ -1,22 +1,30 @@
-library(dplyr)
-library(shiftR)
-library(data.table)
+#-------------------
+#Project Members: Bria Garcia,Alejandro Torrico, Brooke Larkin , Hector Ramos, Ty Matindale
+#Faculty Advisor: Dr. Ed Polh
+#Industry Partners: Raegon Barnes and Willie Nelson
+#-------------------
+
+#library(dplyr)
+#library(shiftR)
+#library(data.table)
 
 #set working directory for personal computer
-wd = "~/Box/Capstone Hershey/Deliverable/Draft_Brooke/Shiny/Functions"
-setwd(wd)
+#wd = "~/Box/Capstone Hershey/Deliverable/Draft_Brooke/Shiny/Functions"
+#setwd(wd)
 
 #establish source and store inputs in variable files
 #source("cleandata2.R")
 #big_file = "VAL2018_Sales_Seasonal Adhoc.xlsx"
 #input_file = "VAL2018_Sales_1500rows.xlsx"
 #two_items = "EAS_2017_TWO_Items.xlsx"
-method2_test = "Method 2 Valentine 2018.xlsx"
+#method3_test = "Easter 2018 Method 3.xlsx"
+#graph_test = "Bar graph data.xlsx"
 
 Not_Enough_OH_Method = function(input_file){
   
-  all_products_data = clean.data (input_file)
-  
+ # incProgress(1/11, message = "Analyzing Not Enough OH MSO")
+ # all_products_data = clean.data (graph_test)
+  all_products_data = input_file
   product_name = unique(all_products_data$UPC)
   #get number of UPCs
   items_length = length(product_name)
@@ -118,10 +126,10 @@ Not_Enough_OH_Method = function(input_file){
     miss_op_table = na.omit(miss_op_table)
 
     #Assign MSO Dollars column to be filled with zero
-    miss_op_table$MSO_Dollars = 0
+    miss_op_table$MSO = 0
     
     #Calculate MSO Dollars
-    miss_op_table$MSO_Dollars = miss_op_table$MSO_Qty * miss_op_table$`Unit Retail`
+    miss_op_table$MSO = miss_op_table$MSO_Qty * miss_op_table$`Unit Retail`
     
     miss_op_table$'Store Count' = NULL
     list_products[[j]] = miss_op_table
@@ -132,7 +140,8 @@ Not_Enough_OH_Method = function(input_file){
   
   combined_products = do.call(rbind, list_products )
   combined_products = na.omit(combined_products)
-
+  
+  
   #Return only the missed sales opportunities table
   return(combined_products)
   

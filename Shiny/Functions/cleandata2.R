@@ -1,5 +1,11 @@
-library(readxl)
-library(shiftR)
+#-------------------
+#Project Members: Bria Garcia,Alejandro Torrico, Brooke Larkin , Hector Ramos, Ty Matindale
+#Faculty Advisor: Dr. Ed Polh
+#Industry Partners: Raegon Barnes and Willie Nelson
+#-------------------
+
+#library(readxl)
+#library(shiftR)
 
 
 #wd = "~/Box/Capstone Hershey/Deliverable/Draft_Brooke"
@@ -7,35 +13,58 @@ library(shiftR)
 
 #big_file = "VAL2018_Sales_Seasonal Adhoc.xlsx"
 #input_file = "VAL2018_Sales_1500rows.xlsx"
-two_items = "EAS_2017_TWO_Items.xlsx"
+#two_items = "EAS_2017_TWO_Items.xlsx"
+#input_file = "Bar graph data.xlsx"
+#input_file = "HOL2018_One_Item.xlsx"
 
 #----------------------
-clean.data = function(input_file){
+clean.data = function(input_file, file_type){
   
+ # incProgress(1/11, message = "Reading Data")
+  
+  if(file_type == "xlsx"){
   #Read the excel file
-  df = read_excel(input_file, col_names = TRUE)
+      df = read_excel(input_file)
+      #incProgress(1/11, message = "Cleaning Data")
+      #Delete the first 3 row of the original data
+      data = df[-c(0,1,2),]
+      
+      #add the correct header to the data frame. Ex: UPC or Store name 
+      #takes first row and makes it the column headers, but still leaves header info in the first row
+      colnames(data) = as.character(unlist(data[1,]))
+      
+      #deletes first row of header names
+      data = data[-1, ]
+  }else if(file_type == "csv"){
+    data =  read.csv2(input_file, quote = "\"", sep = ",", 
+                       header = T)
+  }else if(file_type == "txt"){
+    data =  read.table(input_file, quote = "\"", sep = ",", 
+                       header = T,fileEncoding="UTF-16LE")
+  }
   
-  #Delete the first 3 row of the original data
-  data = df[-c(0,1,2),]
+  #make sure the DF have the right names
   
-  #add the correct header to the data frame. Ex: UPC or Store name 
-  #takes first row and makes it the column headers, but still leaves header info in the first row
-  colnames(data) = as.character(unlist(data[1,]))
-  
-  #deletes first row of header names
-  data = data[-1, ]
-  
-  #cols.num is holding the specific columns to convet to numeric types
-  cols.num = c("UPC", "Store Nbr","Building Postal Code","WM Date" , "OH Qty" , "POS Sales" ,"POS Qty", "Unit Retail" )
-  
+  col_name = c("UPC","Store Nbr",	"HSY Item Description","Building City",	"HSY Seasonal Segmentation"	, 
+              "WM Date",	"Store Name",	"Building State/Prov",	"Building Postal Code",	"SeasonAndYear",
+               "Unit Retail","OH Qty",	"POS Sales",	"POS Qty")
+
+  colnames(data) <- col_name
+  #cols.num is holding the specific columns to convert to numeric types
+  cols.num = c("UPC", "Store Nbr","Building Postal Code", "OH Qty" , "POS Sales" ,"Unit Retail", "POS Qty", "WM Date" )
+  #cols.num = colnames(data)[1,3,5]
+
   data[cols.num] = sapply(data[cols.num],as.numeric)
-  #sapply(data, class)
+ # data["WM Date"] = as.Date.numeric(data$`WM Date`,origin = '12/30/1899')
+ # data["WM Date"] = as.POSIXct(data$`WM Date`, tz = '',  origin = '12/30/1899')
+  #apply(data[,cols.num],2, as.numeric)
+  
   
   #delete all the rows with N/A values
   data = na.omit(data)
   
   #Keep all rows with POS Sales >= 0 (gets rid of negative values)
-  data = data[data$`POS Sales` >= 0,]
+  data = data[data$`POS Sales` >= 0, ]
   
   #Keep all rows with OH Qty >= 0 (gets rid of negative values)
   #data = data[data$`OH Qty` >= 0,]

@@ -1,24 +1,30 @@
-library(dplyr)
-library(shiftR)
-library(data.table)
+#-------------------
+#Project Members: Bria Garcia,Alejandro Torrico, Brooke Larkin , Hector Ramos, Ty Matindale
+#Faculty Advisor: Dr. Ed Polh
+#Industry Partners: Raegon Barnes and Willie Nelson
+#-------------------
+
+#library(dplyr)
+#library(shiftR)
+#library(data.table)
 
 #set working directory for personal computer
 #wd = "~/Box/Capstone Hershey/Deliverable/Draft_Brooke/Shiny/Functions"
-wd = "C:/Users/atorr/Box/Capstone Hershey/Deliverable/hersheyapp/Shiny/Functions"
-setwd(wd)
+#setwd(wd)
 
 #establish source and store inputs in variable files
-source("cleandata2.R")
-source("Limiter_table.R")
+#source("cleandata2.R")
+#source("Limiter_table.R")
 #big_file = "VAL2018_Sales_Seasonal Adhoc.xlsx"
 #input_file = "VAL2018_Sales_1500rows.xlsx"
 #two_items = "EAS_2017_TWO_Items.xlsx"
 #method2_test = "Method 2 Valentine 2018.xlsx"
-method3_test = "Easter 2018 Method 3.xlsx"
+#method3_test = "Easter 2018 Method 3.xlsx"
 
 Weighted_OH_Method = function(input_file){
   
   all_products_data = clean.data (input_file)
+  #all_products_data = input_file
   
   product_name = unique(all_products_data$UPC)
   #get number of UPCs
@@ -132,7 +138,7 @@ Weighted_OH_Method = function(input_file){
     miss_op_table$MSO_Dollars = miss_op_table$MSO_Qty * miss_op_table$`Unit Retail`
     
     miss_op_table$'Store Count' = NULL
-   
+
     
     MSO_Stores = length(unique(miss_op_table$`Store Nbr`))
     
@@ -140,27 +146,24 @@ Weighted_OH_Method = function(input_file){
     
     Weighted_MSO = array(0, dim=nrow(miss_op_table))
     Weighted_MSO_list = list()
-    l =1
+
+    
     for (s in 1:nrow(miss_op_table)){
       
       store_match = which(Store_POS$`Store.Nbr` == miss_op_table$`Store Nbr`[s])
       
       limiter.extract = Store_POS$`Limiter Percentages`[store_match]
       
-      Weighted_MSO_list[s] = limiter.extract
+      Weighted_MSO[s] = limiter.extract
       
-     # miss_op_table['Weighted MSO Mtd 3'] = limiter.extract*miss_op_table$MSO_Dollars[s]
+      #miss_op_table['Weighted MSO Mtd 3'] = limiter.extract*miss_op_table$MSO_Dollars[s]
       
-      
-      
-      l = l+1
     }
+    
     miss_op_table['Weighted MSO list'] =0 
     miss_op_table['Weighted MSO'] = do.call(rbind, Weighted_MSO_list )
     miss_op_table['Weighted MSO list'] = miss_op_table$`Weighted MSO`*miss_op_table$MSO_Dollars
     
-    
-    #add the table of a product to a list
     list_products[[j]] = miss_op_table
     j = j + 1
   }

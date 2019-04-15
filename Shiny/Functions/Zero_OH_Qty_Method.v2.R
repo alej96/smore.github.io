@@ -1,21 +1,32 @@
-library(dplyr)
-library(shiftR)
-library(data.table)
+#-------------------
+#Project Members: Bria Garcia,Alejandro Torrico, Brooke Larkin , Hector Ramos, Ty Matindale
+#Faculty Advisor: Dr. Ed Polh
+#Industry Partners: Raegon Barnes and Willie Nelson
+#-------------------
 
+#library(dplyr)
+#library(shiftR)
+#library(data.table)
+#library(ggplot2)
 #set working directory for personal computer
-#wd = "~/Box/Capstone Hershey/Deliverable/Draft_Brooke"
+#wd = "~/Box/Capstone Hershey/Deliverable/Draft_Brooke/Shiny/Functions"
 #setwd(wd)
 
 #establish source and store inputs in variable files
 #source("cleandata2.R")
+
 #big_file = "VAL2018_Sales_Seasonal Adhoc.xlsx"
 #input_file = "VAL2018_Sales_1500rows.xlsx"
+
 #two_items = "EAS_2017_TWO_Items.xlsx"
+#graph_test = "Bar graph data.xlsx"
+#input_file = "HersheyCapstoneProject.txt"
 
 Zero_OH_Qty_Method= function(input_file){
   
-  all_products_data = clean.data (input_file)
-  
+#  incProgress(1/11, message = "Finding MSO Zero OH Method")
+ # all_products_data = clean.data (input_file)
+  all_products_data = input_file
   product_name = unique(all_products_data$UPC)
   #get number of UPCs
   items_length = length(product_name)
@@ -108,8 +119,10 @@ Zero_OH_Qty_Method= function(input_file){
     
         #Populate the MSO colum with the respective value
         miss_op_table$MSO[i] = output[case1, case2]
+
       }
-  
+      
+      miss_op_table$'Store Count' = NULL
       list_products[[j]] = miss_op_table
       j = j + 1
       
@@ -117,7 +130,12 @@ Zero_OH_Qty_Method= function(input_file){
   
   combined_products = do.call(rbind, list_products )
   combined_products = na.omit(combined_products)
+
+  #combined_products = combined_products[round(combined_products$MSO, digits = 2),]
+
+ # combined_products = combined_products[round(combined_products$MSO),]
   # combined_products = na.omit(combined_products)
+  
   #Return only the missed sales opportunities table
   return(combined_products)
   
