@@ -17,7 +17,7 @@
 #method3_test = "Easter 2018 Method 3.xlsx"
 
 Weighted_OH_Method = function(input_file){
-  
+  mtd3_time_start = proc.time()
   #incProgress(1/11, message = "Analyzing Weighted OH MSO")
  # all_products_data = clean.data (input_file)
   all_products_data = input_file
@@ -170,6 +170,10 @@ Weighted_OH_Method = function(input_file){
   combined_products = do.call(rbind, list_products )
   combined_products = na.omit(combined_products)
   
+  #Total time to calculate mtd3
+  mtd3_time_end = proc.time() - mtd3_time_start
+  print("Total time to calculate Method 3: ")
+  print(mtd3_time_end)
   #Return only the missed sales opportunities table
   return(combined_products)
   

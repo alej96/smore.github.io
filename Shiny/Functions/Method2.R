@@ -22,6 +22,7 @@
 
 Not_Enough_OH_Method = function(input_file){
   
+  mtd2_time_start = proc.time()
  # incProgress(1/11, message = "Analyzing Not Enough OH MSO")
  # all_products_data = clean.data (graph_test)
   all_products_data = input_file
@@ -141,7 +142,10 @@ Not_Enough_OH_Method = function(input_file){
   combined_products = do.call(rbind, list_products )
   combined_products = na.omit(combined_products)
   
-  
+  #Calculate calcualtion time Mtd2
+  mtd2_time_end = proc.time() - mtd2_time_start
+  print("Total time to Calculate Method 2: ")
+  print(mtd2_time_end)
   #Return only the missed sales opportunities table
   return(combined_products)
   

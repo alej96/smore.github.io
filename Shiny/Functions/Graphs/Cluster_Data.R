@@ -5,6 +5,7 @@
 #-------------------
 
 Cluster_Data = function(mtd1, mtd2, mtd3, view_by){
+  
   bar_data_1 = aggregate(list(y = round(mtd1$MSO, 0)), by = list(x = mtd1[[view_by]]), FUN = sum )
   bar_data_2 = aggregate(list(y = round(mtd2$MSO,0)), by = list(x = mtd2[[view_by]]), FUN = sum )
   bar_data_3 = aggregate(list(y = round(mtd3$MSO, 0)), by = list(x = mtd3[[view_by]]), FUN = sum )

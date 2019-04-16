@@ -20,6 +20,7 @@
 #----------------------
 clean.data = function(input_file, file_type){
   
+  clean_time_start = proc.time()
  # incProgress(1/11, message = "Reading Data")
   
   if(file_type == "xlsx"){
@@ -49,7 +50,7 @@ clean.data = function(input_file, file_type){
   data$NetShip_Cost = NULL
   
   #make sure the DF have the right names
-  col_name = c("UPC","HSY Item Description","Hsy Seasonal Segmentation","Store Nbr",
+  col_name = c("UPC","HSY Item Description","HSY Seasonal Segmentation","Store Nbr",
                "Store Name","Building City","Building State/Prov","Building Postal Code",
                "Store Type","WM Date","SeasonAndYear","OH Qty","POS Qty","POS Sales")
   
@@ -62,7 +63,7 @@ clean.data = function(input_file, file_type){
  # data["WM Date"] = as.Date.numeric(data$`WM Date`,origin = '12/30/1899')
  # data["WM Date"] = as.POSIXct(data$`WM Date`, tz = '',  origin = '12/30/1899')
   #apply(data[,cols.num],2, as.numeric)
-  
+  data["WM Date"] <- as.Date(data$`WM Date`, format = "%m/%d/%Y")
   
   #delete all the rows with N/A values
   data = na.omit(data)
@@ -151,6 +152,11 @@ clean.data = function(input_file, file_type){
   }
   
   combine_cleaned_UPCs = do.call(rbind, list_products)
+  
+  #calculate total time spend
+  clean_time_end = proc.time() - clean_time_start
+  print("Total Time for Cleaning data: ")
+  print(clean_time_end)
   
   return(combine_cleaned_UPCs)
 }

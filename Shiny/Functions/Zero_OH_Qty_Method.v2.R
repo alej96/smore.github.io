@@ -24,6 +24,7 @@
 
 Zero_OH_Qty_Method= function(input_file){
   
+  mtd1_time_start = proc.time()
 #  incProgress(1/11, message = "Finding MSO Zero OH Method")
  # all_products_data = clean.data (input_file)
   all_products_data = input_file
@@ -131,11 +132,10 @@ Zero_OH_Qty_Method= function(input_file){
   combined_products = do.call(rbind, list_products )
   combined_products = na.omit(combined_products)
 
-  #combined_products = combined_products[round(combined_products$MSO, digits = 2),]
-
- # combined_products = combined_products[round(combined_products$MSO),]
-  # combined_products = na.omit(combined_products)
-  
+  #total time to calculate mtd1
+  mtd1_time_end = proc.time() - mtd1_time_start
+  print("Total TIME for calculating Method 1: ")
+  print(mtd1_time_end)
   #Return only the missed sales opportunities table
   return(combined_products)
   
