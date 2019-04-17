@@ -35,7 +35,7 @@ Zero_OH_Qty_Method= function(input_file){
   print(list("Number of Items", items_length, product_name))
   
   #++++++++++++++++++++++++++++++++
-  #          Use multiple cores!
+  #          Use multiple cores
   #++++++++++++++++++++++++++++++++
   
   numCores <- detectCores()
