@@ -31,6 +31,11 @@ library("zoo")
 library(shinyWidgets)
 library(shinythemes)
 
+library(foreach)
+library(iterators)
+library(parallel)
+library(doParallel)
+
 #-------------------
 
 #-------------------

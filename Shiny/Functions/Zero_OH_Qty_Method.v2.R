@@ -32,13 +32,21 @@ Zero_OH_Qty_Method= function(input_file){
   #get number of UPCs
   items_length = length(product_name)
   
+  print(list("Number of Items", items_length, product_name))
   
+  #++++++++++++++++++++++++++++++++
+  #          Use multiple cores
+  #++++++++++++++++++++++++++++++++
+  
+  numCores <- detectCores()
+  cl <- makeCluster(numCores)
+  registerDoParallel(cl)
   #**********Make Index and Day Average Tables!******************
-  
   list_products = list()
   j=1
   
-  for(item_nbr in 1:items_length){
+  dummy = foreach(item_nbr = 1:items_length) %dopar% {
+  #for(item_nbr in 1:items_length){
     
       adhoc_data = all_products_data[which(all_products_data$UPC == product_name[item_nbr]),]
   
@@ -106,6 +114,9 @@ Zero_OH_Qty_Method= function(input_file){
       }
   
       #Create a new column for missed sales opportunities (MSO)
+      print("MSo table before calcualting MSO")
+      print(head(miss_op_table))
+      
       miss_op_table$MSO = 0
   
       for (i in 1:nrow(miss_op_table)){
@@ -124,19 +135,20 @@ Zero_OH_Qty_Method= function(input_file){
       }
       
       miss_op_table$'Store Count' = NULL
-      list_products[[j]] = miss_op_table
-      j = j + 1
-      
+      list_products = miss_op_table
+      #list_products[[j]] = miss_op_table
+    #  j = j + 1
+      return(list_products)
   }
-  
-  combined_products = do.call(rbind, list_products )
+  print(list("Number of items of on the list of products", length(dummy) ))
+  combined_products = do.call(rbind, dummy)
   combined_products = na.omit(combined_products)
 
   #total time to calculate mtd1
   mtd1_time_end = proc.time() - mtd1_time_start
   print("Total TIME for calculating Method 1: ")
   print(mtd1_time_end)
+  
   #Return only the missed sales opportunities table
   return(combined_products)
-  
 }
