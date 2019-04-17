@@ -35,6 +35,7 @@ library(foreach)
 library(iterators)
 library(parallel)
 library(doParallel)
+library(data.table) 
 
 #-------------------
 
@@ -336,11 +337,11 @@ server = function(input, output){
         else if(input$download_opt == "down_mtd3"){MSO_3}
       })
     download_name <- reactive({
-      if(input$download_opt == "down_clean_data"){"Clean Data"}
-      else if(input$download_opt == "down_cluster"){"Cluster Data"}
-      else if(input$download_opt == "down_mtd1"){"Method 1 Data"}
-      else if(input$download_opt == "down_mtd2"){"Method 2 Data"}
-      else if(input$download_opt == "down_mtd3"){"Method 3 Data"}
+      if(input$download_opt == "down_clean_data"){"CleanData"}
+      else if(input$download_opt == "down_cluster"){"ClusterData"}
+      else if(input$download_opt == "down_mtd1"){"Method_1_Data"}
+      else if(input$download_opt == "down_mtd2"){"Method_2_Data"}
+      else if(input$download_opt == "down_mtd3"){"Method_3_Data"}
     })
       output$download <- downloadHandler(
         #name the file
@@ -348,7 +349,8 @@ server = function(input, output){
           paste(download_name(), ".csv", sep = "")
         },
         content = function(file) {
-          write.csv(download_data(), file, row.names = FALSE)
+          #write.csv(download_data(), file, row.names = FALSE)
+          fwrite(download_data(), file)
         }
       )
   })

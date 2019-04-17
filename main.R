@@ -7,7 +7,7 @@
 #-------------------
 #Main
 
-#wd = "C:/Users/atorr/Box/Capstone Hershey/Deliverable/Draft_Alejandro"
+#wd = "C:/Users/atorr/Box/Capstone Hershey/Deliverable/hersheyapp_FullSeasonData"
 #setwd(wd)
 #point R to UI and Server
 source("Shiny/server.R")

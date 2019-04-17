@@ -33,15 +33,15 @@ clean.data = function(input_file, file_type){
       #add the correct header to the data frame. Ex: UPC or Store name 
       #takes first row and makes it the column headers, but still leaves header info in the first row
       colnames(data) = as.character(unlist(data[1,]))
-      
       #deletes first row of header names
       data = data[-1, ]
+      #data["WM Date"] = sapply(data["WM Date"],as.numeric)
   }else if(file_type == "csv"){
-    data =  read.csv2(input_file, quote = "\"", sep = ",", 
-                       header = T)
+    #data =  read.csv2(input_file, quote = "\"", sep = ",", header = T)
+    data["WM Date"] <- as.Date(data$`WM Date`, format = "%m/%d/%Y")
   }else if(file_type == "txt"){
-    data =  read.table(input_file, quote = "\"", sep = ",", 
-                       header = T)#,fileEncoding="UTF-16LE")
+    data =  read.table(input_file, quote = "\"", sep = ",", header = T)#,fileEncoding="UTF-16LE")
+    
   }
   
   
@@ -60,10 +60,9 @@ clean.data = function(input_file, file_type){
   #cols.num = colnames(data)[1,3,5]
 
   data[cols.num] = sapply(data[cols.num],as.numeric)
- # data["WM Date"] = as.Date.numeric(data$`WM Date`,origin = '12/30/1899')
- # data["WM Date"] = as.POSIXct(data$`WM Date`, tz = '',  origin = '12/30/1899')
-  #apply(data[,cols.num],2, as.numeric)
   data["WM Date"] <- as.Date(data$`WM Date`, format = "%m/%d/%Y")
+
+  
   
   #delete all the rows with N/A values
   data = na.omit(data)
