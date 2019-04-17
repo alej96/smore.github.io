@@ -35,7 +35,7 @@ Zero_OH_Qty_Method= function(input_file){
   print(list("Number of Items", items_length, product_name))
   
   #++++++++++++++++++++++++++++++++
-  #          Use multiple cores
+  #          Use multiple cores!
   #++++++++++++++++++++++++++++++++
   
   numCores <- detectCores()
@@ -142,8 +142,12 @@ Zero_OH_Qty_Method= function(input_file){
   }
   print(list("Number of items of on the list of products", length(dummy) ))
   combined_products = do.call(rbind, dummy)
+  
+  print(list("# of UPCs BEFORE NA errase", length(unique(combined_products$UPC))))
   combined_products = na.omit(combined_products)
 
+  print(list("# of UPCs AFTER NA errase", length(unique(combined_products$UPC))))
+  print(unique(combined_products$UPC))
   #total time to calculate mtd1
   mtd1_time_end = proc.time() - mtd1_time_start
   print("Total TIME for calculating Method 1: ")
