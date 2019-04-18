@@ -29,7 +29,7 @@ library(plotly)
 library(tidyr)
 library("zoo")
 library(shinyWidgets)
-library(shinythemes)
+#library(shinythemes)
 
 library(foreach)
 library(iterators)
