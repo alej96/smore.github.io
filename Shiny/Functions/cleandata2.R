@@ -98,12 +98,8 @@ clean.data = function(input_file, file_type){
         
         #What does this do  
         data = all_products_data[which(all_products_data$UPC == product_name[item_nbr]),]  
-           
-        #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        #SORT THE DATA BY DATE AND THEN BY STORE NUMBER!!!BABY <3
-        #THEN WE WILL FINALLY DONE...HOPEFULY
-        #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        
+       
+        #Sort data in the correct date/Store order
         data= data[with(data, order( data$`Store Nbr`,data$`WM Date`)), ]
         
         #Get all the store numbers
