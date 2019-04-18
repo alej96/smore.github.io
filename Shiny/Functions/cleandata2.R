@@ -22,7 +22,7 @@
 clean.data = function(input_file, file_type){
   
   clean_time_start = proc.time()
- # incProgress(1/11, message = "Reading Data")
+ incProgress(1/11, message = "Reading Data")
   
   if(file_type == "xlsx"){
   #Read the excel file
@@ -45,7 +45,7 @@ clean.data = function(input_file, file_type){
     
   }
   
-  
+ incProgress(1/11, message = "Cleaning Data")
   #Delete Unnecesary columns!
   data$NetShip_Qty = NULL
   data$NetShip_Cost = NULL
@@ -84,6 +84,10 @@ clean.data = function(input_file, file_type){
   cl <- makeCluster(numCores[1]-1)
   registerDoParallel(cl)
   
+  print("Cores and Cluster for cleaning data:")
+  print(numCores)
+  print(cl)
+  
   #******First Shipment Arrival******
  
   product_name = unique(data$UPC)
@@ -92,7 +96,7 @@ clean.data = function(input_file, file_type){
   
   list_products = list()
   list_count = 1
-  
+  incProgress(1/11, message = "Finding First Shipment Arrival")
   dummy = foreach(item_nbr = 1:items_length) %dopar% {
        # for(item_nbr in 1:items_length){
         

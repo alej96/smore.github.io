@@ -11,7 +11,7 @@ ui = fluidPage(#theme = shinytheme("spacelab"),
   #link to change themes: https://rstudio.github.io/shinythemes/
   #Title of the page
   titlePanel("S.M.O.R.E. app"),
-  setBackgroundImage(src = "https://github.com/alej96/HSY-Presentation/blob/master/HSY_Seasons3.png?raw=true"),
+  setBackgroundImage(src = "https://github.com/alej96/HSY-Presentation/blob/master/HSY_Seasons4.png?raw=true"),
     #src = "http://www.thehersheycompany.com/content/corporate/en_us/this-is-hershey/_jcr_content/pagecontent/corporatebanner/image.img.jpg/1472141151739.jpg"),
     #src = "https://www.hersheys.com/is/image/content/dam/franchise/en_us/images/Common/hsy_tout_simpleingredients_570x320.jpg?hei=320&wid=570&fmt=jpg"),
   

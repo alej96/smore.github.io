@@ -25,7 +25,7 @@
 Zero_OH_Qty_Method= function(input_file){
   
   mtd1_time_start = proc.time()
-#  incProgress(1/11, message = "Finding MSO Zero OH Method")
+  incProgress(1/11, message = "Finding MSO Zero OH Method")
  # all_products_data = clean.data (input_file)
   all_products_data = input_file
   product_name = unique(all_products_data$UPC)
@@ -41,6 +41,10 @@ Zero_OH_Qty_Method= function(input_file){
   numCores <- detectCores()
   cl2 <- makeCluster(numCores[1]-1)
   registerDoParallel(cl2)
+  
+  print("Cores and Cluster for MSO1")
+  print(numCores)
+  print(cl2)
   #**********Make Index and Day Average Tables!******************
   list_products = list()
   j=1
@@ -74,7 +78,7 @@ Zero_OH_Qty_Method= function(input_file){
   
   
   #**********Find Missed Sales Opportunities!*********************
-  
+      incProgress(1/11, message = "Finding MSO for Mtd 1!")
       #Get the length of stores by their id numbers
       n.store = length(unique(miss_op_table$`Store Nbr`))
   
@@ -110,13 +114,9 @@ Zero_OH_Qty_Method= function(input_file){
           #2D array of Missed sales Opportunities
           output[i,j] = Week_avg * index.extract
         }
-        #print(i)
       }
   
       #Create a new column for missed sales opportunities (MSO)
-      print("MSo table before calcualting MSO")
-      print(head(miss_op_table))
-      
       miss_op_table$MSO = 0
   
       for (i in 1:nrow(miss_op_table)){
@@ -147,7 +147,8 @@ Zero_OH_Qty_Method= function(input_file){
   combined_products = na.omit(combined_products)
 
   print(list("# of UPCs AFTER NA errase", length(unique(combined_products$UPC))))
-  print(unique(combined_products$UPC))
+ # print(unique(combined_products$UPC))
+  
   #total time to calculate mtd1
   mtd1_time_end = proc.time() - mtd1_time_start
   print("Total TIME for calculating Method 1: ")
