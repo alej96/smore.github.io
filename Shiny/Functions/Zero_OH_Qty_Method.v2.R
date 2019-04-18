@@ -78,7 +78,7 @@ Zero_OH_Qty_Method= function(input_file){
   
   
   #**********Find Missed Sales Opportunities!*********************
-      incProgress(1/11, message = "Finding MSO for Mtd 1!")
+      #incProgress(1/11, message = "Finding MSO for Mtd 1!")
       #Get the length of stores by their id numbers
       n.store = length(unique(miss_op_table$`Store Nbr`))
   
