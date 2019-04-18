@@ -16,6 +16,7 @@
 #two_items = "EAS_2017_TWO_Items.xlsx"
 #input_file = "Bar graph data.xlsx"
 #input_file = "HOL2018_One_Item.xlsx"
+#input_file = "SeasonalDataExtract copy.txt"
 
 #----------------------
 clean.data = function(input_file, file_type){
@@ -60,10 +61,9 @@ clean.data = function(input_file, file_type){
   #cols.num = colnames(data)[1,3,5]
 
   data[cols.num] = sapply(data[cols.num],as.numeric)
+  
   data["WM Date"] <- as.Date(data$`WM Date`, format = "%m/%d/%Y")
 
-  
-  
   #delete all the rows with N/A values
   data = na.omit(data)
   
@@ -99,6 +99,13 @@ clean.data = function(input_file, file_type){
         #What does this do  
         data = all_products_data[which(all_products_data$UPC == product_name[item_nbr]),]  
            
+        #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        #SORT THE DATA BY DATE AND THEN BY STORE NUMBER!!!BABY <3
+        #THEN WE WILL FINALLY DONE...HOPEFULY
+        #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        
+        data= data[with(data, order( data$`Store Nbr`,data$`WM Date`)), ]
+        
         #Get all the store numbers
         store.id = unique(data$`Store Nbr`)
         
