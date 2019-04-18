@@ -39,8 +39,8 @@ Zero_OH_Qty_Method= function(input_file){
   #++++++++++++++++++++++++++++++++
   
   numCores <- detectCores()
-  cl <- makeCluster(numCores)
-  registerDoParallel(cl)
+  cl2 <- makeCluster(numCores[1]-1)
+  registerDoParallel(cl2)
   #**********Make Index and Day Average Tables!******************
   list_products = list()
   j=1
@@ -152,6 +152,8 @@ Zero_OH_Qty_Method= function(input_file){
   mtd1_time_end = proc.time() - mtd1_time_start
   print("Total TIME for calculating Method 1: ")
   print(mtd1_time_end)
+  
+  stopCluster(cl2)
   
   #Return only the missed sales opportunities table
   return(combined_products)

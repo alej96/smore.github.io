@@ -37,8 +37,8 @@ clean.data = function(input_file, file_type){
       data = data[-1, ]
       #data["WM Date"] = sapply(data["WM Date"],as.numeric)
   }else if(file_type == "csv"){
-    #data =  read.csv2(input_file, quote = "\"", sep = ",", header = T)
-    data["WM Date"] <- as.Date(data$`WM Date`, format = "%m/%d/%Y")
+    data =  read.csv2(input_file, quote = "\"", sep = ",", header = T)
+    #data["WM Date"] <- as.Date(data$`WM Date`, format = "%m/%d/%Y")
   }else if(file_type == "txt"){
     data =  read.table(input_file, quote = "\"", sep = ",", header = T)#,fileEncoding="UTF-16LE")
     
@@ -81,7 +81,7 @@ clean.data = function(input_file, file_type){
   #++++++++++++++++++++++++++++++++
   
   numCores <- detectCores()
-  cl <- makeCluster(numCores)
+  cl <- makeCluster(numCores[1]-1)
   registerDoParallel(cl)
   
   #******First Shipment Arrival******
@@ -167,6 +167,7 @@ clean.data = function(input_file, file_type){
   print("Total Time for Cleaning data: ")
   print(clean_time_end)
   
+  stopCluster(cl)
   return(combine_cleaned_UPCs)
 }
 
