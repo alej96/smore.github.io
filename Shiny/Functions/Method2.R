@@ -34,21 +34,20 @@ Not_Enough_OH_Method = function(input_file){
   #++++++++++++++++++++++++++++++++
   #          Use multiple cores!
   #++++++++++++++++++++++++++++++++
-  
- # numCores <- detectCores()
-  #cl <- makeCluster(numCores)
-  #registerDoParallel(cl)
+  numCores <- detectCores()
+  cl <- makeCluster(numCores)
+  registerDoParallel(cl)
   
   print("Cores and Cluster for MSO2")
-#  print(numCores)
-#  print(cl)
+  print(numCores)
+  print(cl)
   #**********Make Index and Day Average Tables!!******************
   
   list_products = list()
   j=1
   
-  #dummy = foreach(item_nbr = 1:items_length) %dopar% {
-  for(item_nbr in 1:items_length){
+  dummy = foreach(item_nbr = 1:items_length) %dopar% {
+  #for(item_nbr in 1:items_length){
     
     adhoc_data = all_products_data[which(all_products_data$UPC == product_name[item_nbr]),]
     
@@ -133,7 +132,7 @@ Not_Enough_OH_Method = function(input_file){
       
     }
     
-
+    print("++++++=get MSO calculations!!!++++++++")
     adhoc_data$MSO_Qty= (adhoc_data$Expected_Performance - adhoc_data$`OH Qty`)
     
     #Get rid of rows from adhoc_data that have enough OH Qty to meet Expected Performance
@@ -147,14 +146,14 @@ Not_Enough_OH_Method = function(input_file){
     miss_op_table$MSO = miss_op_table$MSO_Qty * miss_op_table$`Unit Retail`
     
     miss_op_table$'Store Count' = NULL
-    list_products[[j]] = miss_op_table
-    j = j + 1
-   # return(list_products)
+    #list_products[[j]] = miss_op_table
+    #j = j + 1
+    return(miss_op_table)
     
   }
   
-  print(list("Number of items MSO2", length(list_products) ))
-  combined_products = do.call(rbind, list_products )
+  #print(list("Number of items MSO2", length(list_products) ))
+  combined_products = do.call(rbind, dummy )
   combined_products = na.omit(combined_products)
   
   #Calculate calcualtion time Mtd2
@@ -162,7 +161,7 @@ Not_Enough_OH_Method = function(input_file){
   print("Total time to Calculate Method 2: ")
   print(mtd2_time_end)
   
-  #stopCluster(cl)
+  stopCluster(cl)
   
   #Return only the missed sales opportunities table
   return(combined_products)

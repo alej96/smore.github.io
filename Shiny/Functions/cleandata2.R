@@ -49,21 +49,21 @@ clean.data = function(input_file, file_type){
   #Delete Unnecesary columns!
   data$NetShip_Qty = NULL
   data$NetShip_Cost = NULL
-  
+  data["Unit Retail"] = 2
   #make sure the DF have the right names
   col_name = c("UPC","HSY Item Description","HSY Seasonal Segmentation","Store Nbr",
                "Store Name","Building City","Building State/Prov","Building Postal Code",
-               "Store Type","WM Date","SeasonAndYear","OH Qty","POS Qty","POS Sales")
+               "Store Type","WM Date","SeasonAndYear","OH Qty","POS Qty","POS Sales", "Unit Retail")
   
   colnames(data) <- col_name
   #cols.num is holding the specific columns to convert to numeric types
-  cols.num = c("UPC", "Store Nbr","Building Postal Code", "OH Qty" , "POS Sales" , "POS Qty")
+  cols.num = c("UPC", "Store Nbr","Building Postal Code", "OH Qty" , "POS Sales" , "POS Qty", "Unit Retail")
   #cols.num = colnames(data)[1,3,5]
 
   data[cols.num] = sapply(data[cols.num],as.numeric)
   
   data["WM Date"] <- as.Date(data$`WM Date`, format = "%m/%d/%Y")
-  data["Unit Retail"] = 2
+  
   #delete all the rows with N/A values
   data = na.omit(data)
   
