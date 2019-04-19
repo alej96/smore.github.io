@@ -36,7 +36,7 @@ Not_Enough_OH_Method = function(input_file){
   #++++++++++++++++++++++++++++++++
   
   numCores <- detectCores()
-  cl <- makeCluster(numCores[1]-1)
+  cl <- makeCluster(numCores)
   registerDoParallel(cl)
   
   print("Cores and Cluster for MSO2")

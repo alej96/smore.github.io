@@ -30,7 +30,7 @@ Weighted_OH_Method = function(input_file){
   #++++++++++++++++++++++++++++++++
   
   numCores <- detectCores()
-  cl <- makeCluster(numCores[1]-1)
+  cl <- makeCluster(numCores)
   registerDoParallel(cl)
   
   print("Cores and Cluster for MSO1")
@@ -162,9 +162,7 @@ Weighted_OH_Method = function(input_file){
       Weighted_MSO_list[s] = limiter.extract
       
      # miss_op_table['Weighted MSO Mtd 3'] = limiter.extract*miss_op_table$MSO_Dollars[s]
-      
-      
-      
+
       l = l+1
     }
     miss_op_table['MSO'] =0 
@@ -174,8 +172,9 @@ Weighted_OH_Method = function(input_file){
     
     #add the table of a product to the list
     #list_products[[j]] = miss_op_table
+    list_products = miss_op_table
     # = j + 1
-    return(miss_op_table)
+    return(list_products)
   }
   
   print(list("Number of items MSO3", length(dummy) ))
