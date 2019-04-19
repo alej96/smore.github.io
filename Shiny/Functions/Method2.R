@@ -23,7 +23,7 @@
 Not_Enough_OH_Method = function(input_file){
   
   mtd2_time_start = proc.time()
- # incProgress(1/11, message = "Analyzing Not Enough OH MSO")
+  incProgress(1/11, message = "Analyzing Not Enough OH MSO")
  # all_products_data = clean.data (graph_test)
   all_products_data = input_file
   product_name = unique(all_products_data$UPC)
@@ -31,12 +31,24 @@ Not_Enough_OH_Method = function(input_file){
   items_length = length(product_name)
   
   
+  #++++++++++++++++++++++++++++++++
+  #          Use multiple cores!
+  #++++++++++++++++++++++++++++++++
+  
+  numCores <- detectCores()
+  cl <- makeCluster(numCores[1]-1)
+  registerDoParallel(cl)
+  
+  print("Cores and Cluster for MSO2")
+  print(numCores)
+  print(cl)
   #**********Make Index and Day Average Tables!******************
   
   list_products = list()
   j=1
   
-  for(item_nbr in 1:items_length){
+  dummy = foreach(item_nbr = 1:items_length) %dopar% {
+  #for(item_nbr in 1:items_length){
     
     adhoc_data = all_products_data[which(all_products_data$UPC == product_name[item_nbr]),]
     
@@ -133,19 +145,23 @@ Not_Enough_OH_Method = function(input_file){
     miss_op_table$MSO = miss_op_table$MSO_Qty * miss_op_table$`Unit Retail`
     
     miss_op_table$'Store Count' = NULL
-    list_products[[j]] = miss_op_table
-    j = j + 1
+    list_products = miss_op_table
+    #j = j + 1
+    return(list_products)
     
   }
   
-  
-  combined_products = do.call(rbind, list_products )
+  print(list("Number of items MSO2", length(dummy) ))
+  combined_products = do.call(rbind, dummy )
   combined_products = na.omit(combined_products)
   
   #Calculate calcualtion time Mtd2
   mtd2_time_end = proc.time() - mtd2_time_start
   print("Total time to Calculate Method 2: ")
   print(mtd2_time_end)
+  
+  stopCluster(cl)
+  
   #Return only the missed sales opportunities table
   return(combined_products)
   

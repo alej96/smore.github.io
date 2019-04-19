@@ -112,7 +112,7 @@ server = function(input, output){
                                "Building State/Prov" =c("empty data", "empty data"),"Building Postal Code" =c(0, 0),
                                "Store Type" = c("empty data", "empty data"),"WM Date" = c("empty data", "empty data"),
                                 "SeasonAndYear" = c("empty data", "empty data"),"OH Qty" = c(0, 0),
-                                "POS Qty" = c(0,0),"POS Sales"= c(0,0), "MSO" = c(0,0))
+                                "POS Qty" = c(0,0),"POS Sales"= c(0,0),"Unit Retail" =c(0,0), "MSO" = c(0,0))
       
       col_names = c("UPC","HSY Item Description","HSY Seasonal Segmentation","Store Nbr",
                     "Store Name","Building City","Building State/Prov","Building Postal Code",

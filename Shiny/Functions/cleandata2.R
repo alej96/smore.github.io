@@ -63,7 +63,7 @@ clean.data = function(input_file, file_type){
   data[cols.num] = sapply(data[cols.num],as.numeric)
   
   data["WM Date"] <- as.Date(data$`WM Date`, format = "%m/%d/%Y")
-
+  data["Unit Retail"] = 2
   #delete all the rows with N/A values
   data = na.omit(data)
   

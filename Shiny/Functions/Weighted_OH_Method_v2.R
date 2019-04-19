@@ -18,20 +18,31 @@
 
 Weighted_OH_Method = function(input_file){
   mtd3_time_start = proc.time()
-  #incProgress(1/11, message = "Analyzing Weighted OH MSO")
+  incProgress(1/11, message = "Analyzing Weighted OH MSO")
  # all_products_data = clean.data (input_file)
   all_products_data = input_file
   product_name = unique(all_products_data$UPC)
   #get number of UPCs
   items_length = length(product_name)
   
+  #++++++++++++++++++++++++++++++++
+  #          Use multiple cores!
+  #++++++++++++++++++++++++++++++++
   
+  numCores <- detectCores()
+  cl <- makeCluster(numCores[1]-1)
+  registerDoParallel(cl)
+  
+  print("Cores and Cluster for MSO1")
+  print(numCores)
+  print(cl)
   #**********Make Index and Day Average Tables!******************
   
   list_products = list()
   j=1
   
-  for(item_nbr in 1:items_length){
+  dummy = foreach(item_nbr = 1:items_length) %dopar% {
+  #for(item_nbr in 1:items_length){
     
     adhoc_data = all_products_data[which(all_products_data$UPC == product_name[item_nbr]),]
     
@@ -162,18 +173,21 @@ Weighted_OH_Method = function(input_file){
     
     
     #add the table of a product to the list
-    list_products[[j]] = miss_op_table
-    j = j + 1
+    #list_products[[j]] = miss_op_table
+    # = j + 1
+    return(miss_op_table)
   }
   
-  
-  combined_products = do.call(rbind, list_products )
+  print(list("Number of items MSO3", length(dummy) ))
+  combined_products = do.call(rbind, dummy )
   combined_products = na.omit(combined_products)
   
   #Total time to calculate mtd3
   mtd3_time_end = proc.time() - mtd3_time_start
   print("Total time to calculate Method 3: ")
   print(mtd3_time_end)
+  
+  stopCluster(cl)
   #Return only the missed sales opportunities table
   return(combined_products)
   
