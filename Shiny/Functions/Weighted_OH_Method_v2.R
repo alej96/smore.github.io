@@ -26,7 +26,7 @@ Weighted_OH_Method = function(input_file){
   items_length = length(product_name)
   
   #++++++++++++++++++++++++++++++++
-  #          Use multiple cores!
+  #          Use multiple cores
   #++++++++++++++++++++++++++++++++
   
   numCores <- detectCores()

@@ -42,7 +42,7 @@ Not_Enough_OH_Method = function(input_file){
   print("Cores and Cluster for MSO2")
   print(numCores)
   print(cl)
-  #**********Make Index and Day Average Tables!******************
+  #**********Make Index and Day Average Tables!!******************
   
   list_products = list()
   j=1
