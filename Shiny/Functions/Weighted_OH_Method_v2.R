@@ -40,7 +40,8 @@ Weighted_OH_Method = function(input_file){
   
   list_products = list()
   j=1
-  print(head(all_products_data))
+  print("++++++++++++++++All products data (beginning)++++++++++++++++")
+  print(head(all_products_data, n = 6L))
   dummy = foreach(item_nbr = 1:items_length) %dopar% {
   #for(item_nbr in 1:items_length){
     
@@ -85,7 +86,13 @@ Weighted_OH_Method = function(input_file){
     
     #Initialize 2D array 
     output = array(0, dim=c(n.store, n.date))
-    
+    print("itme number!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print(item_nbr)
+    if(item_nbr == 1 ){
+    print("==============MAKING the matrix first item MSO=============")
+    }else if (item_nbr == items_length ){
+      print("==============MAKING the matrix last item MSO=============")
+    }
     #Iterates on all stores and create array of missed opportunities
     for (i in 1:n.store){
       
@@ -114,6 +121,11 @@ Weighted_OH_Method = function(input_file){
     Expected_Performance = array(0, dim=c(n.store, n.date))
     adhoc_data$Expected_Performance = 0
     adhoc_data$MSO_Qty = 0
+    if(item_nbr == 1 ){
+      print("==============populating the matrix MSO item 1 =============")
+    }else if (item_nbr == items_length ){
+      print("==============populating the matrix MSO last item =============")
+    }
     
     for (i in 1:nrow(adhoc_data)){
       
@@ -130,6 +142,15 @@ Weighted_OH_Method = function(input_file){
       
     }
     
+    if(item_nbr == 1 ){
+      print("==============Subtracting Exp perf - OH Qty FRIST ITEM =============")
+      print(head(adhoc_data, n = 6L))
+    }else if (item_nbr == items_length ){
+      print("==============Subtracting Exp perf - OH Qty LAST ITEM =============")
+      print(head(adhoc_data, n = 6L))
+    }
+  
+    
     #create MSO Qty column by subtracting OH Qty from the Expected Performance
     adhoc_data$MSO_Qty= (adhoc_data$Expected_Performance - adhoc_data$`OH Qty`)
     
@@ -144,6 +165,14 @@ Weighted_OH_Method = function(input_file){
     miss_op_table$MSO_Dollars = miss_op_table$MSO_Qty * miss_op_table$`Unit Retail`
     
     miss_op_table$'Store Count' = NULL
+    if(item_nbr == 1 ){
+      print("Complete MSO Dollars table first item")
+      print(head(miss_op_table, n = 6L))
+    }else if (item_nbr == items_length ){
+      print("Complete MSO Dollars table last item")
+      print(head(miss_op_table, n = 6L))
+    }
+
    
     MSO_Stores = length(unique(miss_op_table$`Store Nbr`))
     
@@ -152,6 +181,7 @@ Weighted_OH_Method = function(input_file){
     Weighted_MSO = array(0, dim=nrow(miss_op_table))
     Weighted_MSO_list = list()
     l =1
+    
     for (s in 1:nrow(miss_op_table)){
       
       store_match = which(Store_POS$`Store.Nbr` == miss_op_table$`Store Nbr`[s])
@@ -168,7 +198,13 @@ Weighted_OH_Method = function(input_file){
     miss_op_table['Weighted MSO'] = do.call(rbind, Weighted_MSO_list )
     miss_op_table['MSO'] = miss_op_table$`Weighted MSO`*miss_op_table$MSO_Dollars
     
-    
+    if(item_nbr == 1 ){
+      print("Complete DF first item")
+      print(head(miss_op_table, n = 6L))
+    }else if (item_nbr == items_length ){
+      print("Complete DF last item")
+      print(head(miss_op_table, n = 6L))
+    }
     #add the table of a product to the list
     #list_products[[j]] = miss_op_table
     list_products = miss_op_table
@@ -177,10 +213,10 @@ Weighted_OH_Method = function(input_file){
   }
   
   
-  print(list("Number of items MSO3", length(dummy) ))
-  print(head(dummy))
+  print(list("Number of items MSO3 (dummy)", length(dummy) ))
+  #print(head(dummy,  n = 6L))
   combined_products = do.call(rbind, dummy )
-  print(head(combined_products))
+  print(head(combined_products, n = 6L))
   combined_products = na.omit(combined_products)
   
   #Total time to calculate mtd3
