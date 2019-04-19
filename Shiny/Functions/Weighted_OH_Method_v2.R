@@ -33,14 +33,14 @@ Weighted_OH_Method = function(input_file){
   cl <- makeCluster(numCores)
   registerDoParallel(cl)
   
-  print("Cores and Cluster for MSO1")
+  print("Cores and Cluster for MSO 3:")
   print(numCores)
   print(cl)
   #**********Make Index and Day Average Tables!******************
   
   list_products = list()
   j=1
-  
+  print(head(all_products_data))
   dummy = foreach(item_nbr = 1:items_length) %dopar% {
   #for(item_nbr in 1:items_length){
     
@@ -145,7 +145,6 @@ Weighted_OH_Method = function(input_file){
     
     miss_op_table$'Store Count' = NULL
    
-    
     MSO_Stores = length(unique(miss_op_table$`Store Nbr`))
     
     MSO_Store_ID = unique(miss_op_table$`Store Nbr`)
@@ -177,8 +176,11 @@ Weighted_OH_Method = function(input_file){
     return(list_products)
   }
   
+  
   print(list("Number of items MSO3", length(dummy) ))
+  print(head(dummy))
   combined_products = do.call(rbind, dummy )
+  print(head(combined_products))
   combined_products = na.omit(combined_products)
   
   #Total time to calculate mtd3
