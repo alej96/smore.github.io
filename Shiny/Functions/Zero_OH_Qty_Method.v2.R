@@ -39,7 +39,7 @@ Zero_OH_Qty_Method= function(input_file){
   #++++++++++++++++++++++++++++++++
   
   numCores <- detectCores()
-  cl <- makeCluster(numCores)
+  cl <- makeCluster(numCores[1]-3)
   registerDoParallel(cl)
   
   print("Cores and Cluster for MSO1")
@@ -51,7 +51,8 @@ Zero_OH_Qty_Method= function(input_file){
   
   dummy = foreach(item_nbr = 1:items_length) %dopar% {
   #for(item_nbr in 1:items_length){
-    
+      print("Printed Print")
+    paste("Printed paste")
       adhoc_data = all_products_data[which(all_products_data$UPC == product_name[item_nbr]),]
   
       #Add column to track if a store made a sale
@@ -134,12 +135,13 @@ Zero_OH_Qty_Method= function(input_file){
 
       }
       
-      miss_op_table$'Store Count' = NULL
+      
       list_products = miss_op_table
       #list_products[[j]] = miss_op_table
     #  j = j + 1
       return(list_products)
   }
+  miss_op_table$'Store Count' = NULL
   print(list("Number of items of on the list of products", length(dummy) ))
   combined_products = do.call(rbind, dummy)
   

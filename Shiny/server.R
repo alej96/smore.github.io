@@ -66,7 +66,7 @@ source("Shiny/Functions/Graphs/Cluster_Data.R")
 server = function(input, output){
   
   #Increase max limit on file size to 50MB
-  options(shiny.maxRequestSize=500^1024^2) 
+  options(shiny.maxRequestSize=50000^1024^2) 
   
   #Wait for Submit Button
   observeEvent(input$submit, {
@@ -96,27 +96,44 @@ server = function(input, output){
       
       nbr_mtds = length(mtd_list)
       
-   #   empty_data <- data.frame("UPC" = c(0,0),"Store Nbr"=c(0,0),	"HSY Item Description" = c("empty data","empty data"),
-    #                          "Building City" =c("empty data", "empty data"),	
-     #                         "HSY Seasonal Segmentation" =c( "empty data","empty data"),
-      #                        "WM Date" = c(0,0),	"Store Name" = c("empty data","empty data"),
-       #                       "Building State/Prov" =c("empty data","empty data"),	
-        #                      "Building Postal Code"= c("empty data","empty data"),
-         #                     "SeasonAndYear" = c("empty data","empty data"),
-          #                    "Unit Retail" =c(0,0) ,"OH Qty" = c(0,0),	
-           #                   "POS Sales" =c(0,0),	"POS Qty"=c(0,0), "MSO" =c(0,0))
+      if(input$file_type == "xlsx"){
+      empty_data <- data.frame("UPC" = c(0,0),"HSY Seasonal Segmentation" =c( "empty data","empty data"),
+                               	"HSY Item Description" = c("empty data","empty data"),"Store Nbr"=c(0,0),
+                               "Store Type" = c("empty data", "empty data"),"Building City" =c("empty data", "empty data"),	
+                               "Building State/Prov" =c("empty data","empty data"),
+                              "WM Date" = c(0,0),	"Store Name" = c("empty data","empty data"),
+                              "Unit Retail" =c(0,0),"SeasonAndYear" = c("empty data","empty data"),
+                               "OH Qty" = c(0,0), "POS Sales" =c(0,0),	"POS Qty"=c(0,0), "MSO" =c(0,0))
       
-      empty_data <- data.frame("UPC"= c(0,0),"HSY Item Description" = c("empty data", "empty data"),
-                               "HSY Seasonal Segmentation"= c("empty data","empty data"),"Store Nbr"=c(0,0),
-                               "Store Name" = c("empty data", "empty data"),"Building City" =c("empty data", "empty data"),
-                               "Building State/Prov" =c("empty data", "empty data"),"Building Postal Code" =c(0, 0),
-                               "Store Type" = c("empty data", "empty data"),"WM Date" = c("empty data", "empty data"),
-                                "SeasonAndYear" = c("empty data", "empty data"),"OH Qty" = c(0, 0),
-                                "POS Qty" = c(0,0),"POS Sales"= c(0,0),"Unit Retail" =c(0,0), "MSO" = c(0,0))
+      col_names = c("UPC","HSY Seasonal Segmentation", "HSY Item Description", "Store Nbr", 
+                   "Store Type",	"Building City","Building State/Prov",  "WM Date",	
+                   "Unit Retail", "SeasonAndYear", "OH Qty",	"POS Sales",	"POS Qty", "MSO")
       
-      col_names = c("UPC","HSY Item Description","HSY Seasonal Segmentation","Store Nbr",
-                    "Store Name","Building City","Building State/Prov","Building Postal Code",
-                    "Store Type","WM Date","SeasonAndYear","OH Qty","POS Qty","POS Sales", "MSO")
+      }
+      else{
+        empty_data <- data.frame("UPC" = c(0,0),"HSY Seasonal Segmentation" =c( "empty data","empty data"),
+                                 "HSY Item Description" = c("empty data","empty data"),"Store Nbr"=c(0,0),
+                                 "Store Type" = c("empty data", "empty data"),"Building City" =c("empty data", "empty data"),	
+                                 "Building State/Prov" =c("empty data","empty data"),
+                                 "WM Date" = c(0,0),	"Store Name" = c("empty data","empty data"),
+                                 "Unit Retail" =c(0,0), "OH Qty" = c(0,0), "POS Sales" =c(0,0),
+                                	"POS Qty"=c(0,0), "MSO" =c(0,0))
+        
+        col_names = c("UPC","HSY Seasonal Segmentation", "HSY Item Description", "Store Nbr",
+                         "Store Type",	"Building City","Building State/Prov",  "WM Date",	
+                         "Unit Retail",  "OH Qty",	"POS Sales",	"POS Qty", "MSO")
+      }
+      #empty_data <- data.frame("UPC"= c(0,0),"HSY Item Description" = c("empty data", "empty data"),
+       #                        "HSY Seasonal Segmentation"= c("empty data","empty data"),"Store Nbr"=c(0,0),
+        #                       "Store Name" = c("empty data", "empty data"),"Building City" =c("empty data", "empty data"),
+         #                      "Building State/Prov" =c("empty data", "empty data"),"Building Postal Code" =c(0, 0),
+          #                     "Store Type" = c("empty data", "empty data"),"WM Date" = c("empty data", "empty data"),
+           #                     "SeasonAndYear" = c("empty data", "empty data"),"OH Qty" = c(0, 0),
+            #                    "POS Qty" = c(0,0),"POS Sales"= c(0,0),"Unit Retail" =c(0,0), "MSO" = c(0,0))
+      
+     # col_names = c("UPC","HSY Item Description","HSY Seasonal Segmentation","Store Nbr",
+      #              "Store Name","Building City","Building State/Prov","Building Postal Code",
+      #              "Store Type","WM Date","SeasonAndYear","OH Qty","POS Qty","POS Sales", "MSO")
       
       colnames(empty_data) <- col_names
       

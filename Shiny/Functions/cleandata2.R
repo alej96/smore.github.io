@@ -47,17 +47,27 @@ clean.data = function(input_file, file_type){
   
  incProgress(1/11, message = "Cleaning Data")
   #Delete Unnecesary columns!
-  data$NetShip_Qty = NULL
-  data$NetShip_Cost = NULL
-  data["Unit Retail"] = 2
+ # data$NetShip_Qty = NULL
+  #data$NetShip_Cost = NULL
+  #data["Unit Retail"] = 2
   #make sure the DF have the right names
-  col_name = c("UPC","HSY Item Description","HSY Seasonal Segmentation","Store Nbr",
-               "Store Name","Building City","Building State/Prov","Building Postal Code",
-               "Store Type","WM Date","SeasonAndYear","OH Qty","POS Qty","POS Sales", "Unit Retail")
+  if(file_type == "xlsx"){
+      col_name = c("UPC","HSY Seasonal Segmentation", "HSY Item Description", "Store Nbr", 
+                   "Store Type",	"Building City","Building State/Prov",  "WM Date",	
+                   	"Unit Retail", "SeasonAndYear", "OH Qty",	"POS Sales",	"POS Qty")}
+  else{
+        col_name = c("UPC","HSY Seasonal Segmentation", "HSY Item Description", "Store Nbr",
+                     "Store Type",	"Building City","Building State/Prov",  "WM Date",	
+                     	"Unit Retail",  "OH Qty",	"POS Sales",	"POS Qty")
+      }
+  
+#  col_name = c("UPC","HSY Item Description","HSY Seasonal Segmentation","Store Nbr",
+ #              "Store Name","Building City","Building State/Prov","Building Postal Code",
+  #             "Store Type","WM Date","SeasonAndYear","OH Qty","POS Qty","POS Sales", "Unit Retail")
   
   colnames(data) <- col_name
   #cols.num is holding the specific columns to convert to numeric types
-  cols.num = c("UPC", "Store Nbr","Building Postal Code", "OH Qty" , "POS Sales" , "POS Qty", "Unit Retail")
+  cols.num = c("UPC", "Store Nbr", "OH Qty" , "POS Sales" , "POS Qty", "Unit Retail")
   #cols.num = colnames(data)[1,3,5]
 
   data[cols.num] = sapply(data[cols.num],as.numeric)

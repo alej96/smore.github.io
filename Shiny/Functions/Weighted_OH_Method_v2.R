@@ -30,7 +30,7 @@ Weighted_OH_Method = function(input_file){
   #++++++++++++++++++++++++++++++++
   
   numCores <- detectCores()
-  cl <- makeCluster(numCores)
+  cl <- makeCluster(numCores[1]-3)
   registerDoParallel(cl)
   
   print("Cores and Cluster for MSO 3:")
