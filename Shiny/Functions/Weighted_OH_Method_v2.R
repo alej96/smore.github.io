@@ -18,9 +18,10 @@
 
 Weighted_OH_Method = function(input_file){
   mtd3_time_start = proc.time()
-  incProgress(1/11, message = "Analyzing Weighted OH MSO")
+  #incProgress(1/11, message = "Analyzing Weighted OH MSO")
  # all_products_data = clean.data (input_file)
   all_products_data = input_file
+  all_products_data$MSO = 0
   product_name = unique(all_products_data$UPC)
   #get number of UPCs
   items_length = length(product_name)
@@ -30,7 +31,7 @@ Weighted_OH_Method = function(input_file){
   #++++++++++++++++++++++++++++++++
   
   numCores <- detectCores()
-  cl <- makeCluster(numCores[1]-3)
+  cl <- makeCluster(numCores[1]-1)
   registerDoParallel(cl)
   
   print("Cores and Cluster for MSO 3:")
@@ -42,6 +43,7 @@ Weighted_OH_Method = function(input_file){
   j=1
   print("++++++++++++++++All products data (beginning)++++++++++++++++")
   print(head(all_products_data, n = 6L))
+  
   dummy = foreach(item_nbr = 1:items_length) %dopar% {
   #for(item_nbr in 1:items_length){
     
@@ -86,7 +88,7 @@ Weighted_OH_Method = function(input_file){
     
     #Initialize 2D array 
     output = array(0, dim=c(n.store, n.date))
-    print("itme number!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print("item number!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     print(item_nbr)
     if(item_nbr == 1 ){
     print("==============MAKING the matrix first item MSO=============")
@@ -95,14 +97,11 @@ Weighted_OH_Method = function(input_file){
     }
     #Iterates on all stores and create array of missed opportunities
     for (i in 1:n.store){
-      
       #Identify which rows have 
       case = which(Store_POS$Store.Nbr == store.id[i])
-      
       #Get Index of of Store POS
       index.extract = Store_POS$`Store Index`[case]
-      
-      
+
       for (j in 1:n.date){
         #Locate the respective date from the Week Average table 
         case = which(Weekday_POS$Weekday == date.id[j])
@@ -153,18 +152,20 @@ Weighted_OH_Method = function(input_file){
     
     #create MSO Qty column by subtracting OH Qty from the Expected Performance
     adhoc_data$MSO_Qty= (adhoc_data$Expected_Performance - adhoc_data$`OH Qty`)
-    
+  
     #Get rid of rows from adhoc_data that have enough OH Qty to meet Expected Performance
     miss_op_table = adhoc_data[adhoc_data$MSO_Qty > 0 , ]
     miss_op_table = na.omit(miss_op_table)
+       #Sanitiy check, avoid empty DF
+  if(nrow(miss_op_table) > 1 ){
+    
     
     #Assign MSO Dollars column to be filled with zero
     miss_op_table$MSO_Dollars = 0
     
     #Calculate MSO Dollars
     miss_op_table$MSO_Dollars = miss_op_table$MSO_Qty * miss_op_table$`Unit Retail`
-    
-    miss_op_table$'Store Count' = NULL
+  
     if(item_nbr == 1 ){
       print("Complete MSO Dollars table first item")
       print(head(miss_op_table, n = 6L))
@@ -194,9 +195,13 @@ Weighted_OH_Method = function(input_file){
 
       l = l+1
     }
-    miss_op_table['MSO'] =0 
     miss_op_table['Weighted MSO'] = do.call(rbind, Weighted_MSO_list )
     miss_op_table['MSO'] = miss_op_table$`Weighted MSO`*miss_op_table$MSO_Dollars
+    miss_op_table$MSO_Dollars = NULL
+    miss_op_table$`Weighted MSO` = NULL
+    }else{
+      miss_op_table = adhoc_data[nrow(adhoc_data)-1,]
+    }
     
     if(item_nbr == 1 ){
       print("Complete DF first item")
@@ -205,18 +210,20 @@ Weighted_OH_Method = function(input_file){
       print("Complete DF last item")
       print(head(miss_op_table, n = 6L))
     }
+    miss_op_table$'Store Count' = NULL
+    miss_op_table$MSO_Qty = NULL
+    miss_op_table$Expected_Performance = NULL
     #add the table of a product to the list
     #list_products[[j]] = miss_op_table
-    list_products = miss_op_table
     # = j + 1
-    return(list_products)
+    return(miss_op_table)
   }
   
   
   print(list("Number of items MSO3 (dummy)", length(dummy) ))
   #print(head(dummy,  n = 6L))
   combined_products = do.call(rbind, dummy )
-  print(head(combined_products, n = 6L))
+  #print(head(combined_products, n = 6L))
   combined_products = na.omit(combined_products)
   
   #Total time to calculate mtd3

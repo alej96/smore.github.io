@@ -22,12 +22,15 @@
 clean.data = function(input_file, file_type){
   
   clean_time_start = proc.time()
- incProgress(1/11, message = "Reading Data")
+# incProgress(1/11, message = "Reading Data")
   
   if(file_type == "xlsx"){
   #Read the excel file
-      df = read_excel(input_file)
-      #incProgress(1/11, message = "Cleaning Data")
+
+      df = tryCatch(read_excel(input_file), error = function(err) {
+                print(paste("MY_ERROR:  ",err))
+                read.table(input_file, quote = "\"", sep = ",", header = T)} )
+      
       #Delete the first 3 row of the original data
       data = df[-c(0,1,2),]
       
@@ -38,14 +41,14 @@ clean.data = function(input_file, file_type){
       data = data[-1, ]
       #data["WM Date"] = sapply(data["WM Date"],as.numeric)
   }else if(file_type == "csv"){
-    data =  read.csv2(input_file, quote = "\"", sep = ",", header = T)
+    data =  try(read.csv2(input_file, quote = "\"", sep = ",", header = T))
     #data["WM Date"] <- as.Date(data$`WM Date`, format = "%m/%d/%Y")
   }else if(file_type == "txt"){
-    data =  read.table(input_file, quote = "\"", sep = ",", header = T)#,fileEncoding="UTF-16LE")
+    data =  try(read.table(input_file, quote = "\"", sep = ",", header = T))#,fileEncoding="UTF-16LE")
     
   }
-  
- incProgress(1/11, message = "Cleaning Data")
+
+ #incProgress(1/11, message = "Cleaning Data")
   #Delete Unnecesary columns!
  # data$NetShip_Qty = NULL
   #data$NetShip_Cost = NULL
@@ -67,7 +70,7 @@ clean.data = function(input_file, file_type){
   
   colnames(data) <- col_name
   #cols.num is holding the specific columns to convert to numeric types
-  cols.num = c("UPC", "Store Nbr", "OH Qty" , "POS Sales" , "POS Qty", "Unit Retail")
+  cols.num = c("UPC", "Store Nbr", "Unit Retail","OH Qty" , "POS Sales" , "POS Qty")
   #cols.num = colnames(data)[1,3,5]
 
   data[cols.num] = sapply(data[cols.num],as.numeric)
@@ -106,7 +109,7 @@ clean.data = function(input_file, file_type){
   
   list_products = list()
   list_count = 1
-  incProgress(1/11, message = "Finding First Shipment Arrival")
+ # incProgress(1/11, message = "Finding First Shipment Arrival")
   dummy = foreach(item_nbr = 1:items_length) %dopar% {
        # for(item_nbr in 1:items_length){
         

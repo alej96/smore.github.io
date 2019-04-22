@@ -25,9 +25,10 @@
 Zero_OH_Qty_Method= function(input_file){
   
   mtd1_time_start = proc.time()
-  incProgress(1/11, message = "Finding MSO Zero OH Method")
+ # incProgress(1/11, message = "Finding MSO Zero OH Method")
  # all_products_data = clean.data (input_file)
   all_products_data = input_file
+  all_products_data$MSO = 0
   product_name = unique(all_products_data$UPC)
   #get number of UPCs
   items_length = length(product_name)
@@ -39,16 +40,16 @@ Zero_OH_Qty_Method= function(input_file){
   #++++++++++++++++++++++++++++++++
   
   numCores <- detectCores()
-  cl <- makeCluster(numCores[1]-3)
-  registerDoParallel(cl)
+  cl2 <- makeCluster(numCores[1])
+  registerDoParallel(cl2)
   
   print("Cores and Cluster for MSO1")
   print(numCores)
-  print(cl)
+  print(cl2)
   #**********Make Index and Day Average Tables!******************
-  list_products = list()
-  j=1
-  
+  #list_products = list()
+ # j=1
+#  dummy = list()
   dummy = foreach(item_nbr = 1:items_length) %dopar% {
   #for(item_nbr in 1:items_length){
       print("Printed Print")
@@ -76,7 +77,7 @@ Zero_OH_Qty_Method= function(input_file){
       #New table that only shows missed sales opportunities
       miss_op_table = adhoc_data[adhoc_data$`OH Qty` == 0, ]
   
-  
+      if(nrow(miss_op_table) > 1 ){
   
   #**********Find Missed Sales Opportunities!*********************
       #incProgress(1/11, message = "Finding MSO for Mtd 1!")
@@ -116,9 +117,9 @@ Zero_OH_Qty_Method= function(input_file){
           output[i,j] = Week_avg * index.extract
         }
       }
-  
+      
       #Create a new column for missed sales opportunities (MSO)
-      miss_op_table$MSO = 0
+      
   
       for (i in 1:nrow(miss_op_table)){
     
@@ -134,15 +135,22 @@ Zero_OH_Qty_Method= function(input_file){
         miss_op_table$MSO[i] = output[case1, case2]
 
       }
-      
-      
-      list_products = miss_op_table
+     
       #list_products[[j]] = miss_op_table
     #  j = j + 1
-      return(list_products)
+     }
+      else{
+        miss_op_table = adhoc_data[nrow(adhoc_data)-1,]
+      }
+      miss_op_table$'Store Count' = NULL
+      miss_op_table =  na.omit(miss_op_table)
+      #View(miss_op_table)
+      
+      return(miss_op_table)
   }
-  miss_op_table$'Store Count' = NULL
-  print(list("Number of items of on the list of products", length(dummy) ))
+  #View(dummy)
+  #View(names(dummy))
+  print(list("Number of items of on the list of products", length(dummy)))
   combined_products = do.call(rbind, dummy)
   
   print(list("# of UPCs BEFORE NA errase", length(unique(combined_products$UPC))))
@@ -156,7 +164,7 @@ Zero_OH_Qty_Method= function(input_file){
   print("Total TIME for calculating Method 1: ")
   print(mtd1_time_end)
   
-  stopCluster(cl)
+  stopCluster(cl2)
   
   #Return only the missed sales opportunities table
   return(combined_products)

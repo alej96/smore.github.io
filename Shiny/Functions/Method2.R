@@ -23,9 +23,10 @@
 Not_Enough_OH_Method = function(input_file){
   
   mtd2_time_start = proc.time()
-  incProgress(1/11, message = "Analyzing Not Enough OH MSO")
+  #incProgress(1/11, message = "Analyzing Not Enough OH MSO")
  # all_products_data = clean.data (graph_test)
   all_products_data = input_file
+  all_products_data$MSO = 0
   product_name = unique(all_products_data$UPC)
   #get number of UPCs
   items_length = length(product_name)
@@ -89,14 +90,11 @@ Not_Enough_OH_Method = function(input_file){
     print("=======About to create the matrix===================")
     #Iterates on all stores and create array of missed opportunities
     for (i in 1:n.store){
-      
       #Identify which rows have 
       case = which(Store_POS$Store.Nbr == store.id[i])
       
       #Get Index of of Store POS
       index.extract = Store_POS$`Store Index`[case]
-      
-      
       for (j in 1:n.date){
         #Locate the respective date from the Week Average table 
         case = which(Weekday_POS$Weekday == date.id[j])
@@ -107,7 +105,6 @@ Not_Enough_OH_Method = function(input_file){
         #2D array of Missed sales Opportunities
         output[i,j] = Week_avg * index.extract
       }
-
     }
     
     #Create a new column for missed sales opportunities (MSO)
@@ -135,17 +132,22 @@ Not_Enough_OH_Method = function(input_file){
     print("++++++=get MSO calculations!!!++++++++")
     adhoc_data$MSO_Qty= (adhoc_data$Expected_Performance - adhoc_data$`OH Qty`)
     
+    
     #Get rid of rows from adhoc_data that have enough OH Qty to meet Expected Performance
     miss_op_table = adhoc_data[adhoc_data$MSO_Qty > 0 , ]
     miss_op_table = na.omit(miss_op_table)
-
+    if(nrow(miss_op_table) > 1 ){
     #Assign MSO Dollars column to be filled with zero
-    miss_op_table$MSO = 0
+   # miss_op_table$MSO = 0
     
     #Calculate MSO Dollars
     miss_op_table$MSO = miss_op_table$MSO_Qty * miss_op_table$`Unit Retail`
-    
+    }else{
+      miss_op_table = adhoc_data[nrow(adhoc_data)-1,]
+    }
     miss_op_table$'Store Count' = NULL
+    miss_op_table$MSO_Qty = NULL
+    miss_op_table$Expected_Performance = NULL
     #list_products[[j]] = miss_op_table
     #j = j + 1
     return(miss_op_table)
