@@ -31,6 +31,9 @@ ui = fluidPage(#theme = shinytheme("spacelab"),
                   ".xlsx"
                 )
       ),
+      checkboxInput("fakeData",
+                    "No Data? Check to generate FAKE data ", value = FALSE),
+      
       selectInput("file_type", "Select File Type:",
                  choices = c(".xlsx" = "xlsx",
                              ".csv" = "csv",

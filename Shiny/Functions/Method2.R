@@ -23,7 +23,7 @@
 Not_Enough_OH_Method = function(input_file){
   
   mtd2_time_start = proc.time()
-  #incProgress(1/11, message = "Analyzing Not Enough OH MSO")
+  incProgress(1/11, message = "Analyzing Not Enough OH MSO")
  # all_products_data = clean.data (graph_test)
   all_products_data = input_file
   all_products_data$MSO = 0

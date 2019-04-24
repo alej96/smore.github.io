@@ -18,7 +18,7 @@
 
 Weighted_OH_Method = function(input_file){
   mtd3_time_start = proc.time()
-  #incProgress(1/11, message = "Analyzing Weighted OH MSO")
+  incProgress(1/11, message = "Analyzing Weighted OH MSO")
  # all_products_data = clean.data (input_file)
   all_products_data = input_file
   all_products_data$MSO = 0

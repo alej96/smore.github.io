@@ -22,7 +22,7 @@
 clean.data = function(input_file, file_type){
   
   clean_time_start = proc.time()
-# incProgress(1/11, message = "Reading Data")
+ incProgress(1/11, message = "Reading Data")
   
   if(file_type == "xlsx"){
   #Read the excel file
@@ -42,13 +42,14 @@ clean.data = function(input_file, file_type){
       #data["WM Date"] = sapply(data["WM Date"],as.numeric)
   }else if(file_type == "csv"){
     data =  try(read.csv2(input_file, quote = "\"", sep = ",", header = T))
+   
     #data["WM Date"] <- as.Date(data$`WM Date`, format = "%m/%d/%Y")
   }else if(file_type == "txt"){
     data =  try(read.table(input_file, quote = "\"", sep = ",", header = T))#,fileEncoding="UTF-16LE")
     
   }
 
- #incProgress(1/11, message = "Cleaning Data")
+ incProgress(1/11, message = "Cleaning Data")
   #Delete Unnecesary columns!
  # data$NetShip_Qty = NULL
   #data$NetShip_Cost = NULL
@@ -76,13 +77,14 @@ clean.data = function(input_file, file_type){
   data[cols.num] = sapply(data[cols.num],as.numeric)
   
   data["WM Date"] <- as.Date(data$`WM Date`, format = "%m/%d/%Y")
-  
+ 
   #delete all the rows with N/A values
   data = na.omit(data)
   
   #Keep all rows with POS Sales >= 0 (gets rid of negative values)
   data = data[data$`POS Sales` >= 0, ]
   
+
   #Keep all rows with OH Qty >= 0 (gets rid of negative values)
   #data = data[data$`OH Qty` >= 0,]
   
@@ -100,7 +102,7 @@ clean.data = function(input_file, file_type){
   print("Cores and Cluster for cleaning data:")
   print(numCores)
   print(cl)
-  
+
   #******First Shipment Arrival******
  
   product_name = unique(data$UPC)
@@ -186,7 +188,6 @@ clean.data = function(input_file, file_type){
   clean_time_end = proc.time() - clean_time_start
   print("Total Time for Cleaning data: ")
   print(clean_time_end)
-  
   stopCluster(cl)
   return(combine_cleaned_UPCs)
 }

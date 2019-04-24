@@ -71,26 +71,28 @@ server = function(input, output){
   #Wait for Submit Button
   observeEvent(input$submit, {
     
-    #Validate an input file as been selected
-    validate(
-      need(input$data.in, "No File Selected")
-    )
 
     
     withProgress(message = "Starting", value = 0,{
       
-      req(input$data.in)
-
-      #Table Title
+      if(input$fakeData == TRUE){
+        url_DF = "https://raw.githubusercontent.com/alej96/HSY-Presentation/master/Data_Symposium.csv"
+        #url_DF = "https://raw.githubusercontent.com/alej96/HSY-Presentation/master/EAS2017_data.csv"
+        clean_data = clean.data(url_DF, "csv")
+        
+      }else{
+        #Validate an input file as been selected
+        validate(
+          need(input$data.in, "No File Selected")
+        )
+       req(input$data.in)
+       req(input$methods)
+      #Pass input file to clean.data
+       clean_data = clean.data(input$data.in$datapath, input$file_type)
+      }
       output$SalesData <- renderText( 
         paste("Sales Data Table")
       )
-      
-      #Pass input file to clean.data
-      #incProgress(1/11, message = "Analyzing Missed Sales Opportunities")
-      req(input$methods)
-      clean_data = clean.data(input$data.in$datapath, input$file_type)
-      
       mtd_list = list()
       mtd_list = input$methods
       

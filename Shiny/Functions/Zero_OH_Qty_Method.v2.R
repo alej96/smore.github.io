@@ -25,7 +25,7 @@
 Zero_OH_Qty_Method= function(input_file){
   
   mtd1_time_start = proc.time()
- # incProgress(1/11, message = "Finding MSO Zero OH Method")
+ incProgress(1/11, message = "Finding MSO Zero OH Method")
  # all_products_data = clean.data (input_file)
   all_products_data = input_file
   all_products_data$MSO = 0
